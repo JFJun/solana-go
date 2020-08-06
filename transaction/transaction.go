@@ -64,7 +64,7 @@ func (tx *Transaction) Sign(accounts []*account.Account) error {
 	}
 	tx.Signatures = signatures
 	signData, err := tx.serializeMessage()
-	fmt.Println(len(signData))
+
 	if err != nil {
 		return fmt.Errorf("serial sign message error,Err==%v", err)
 	}
@@ -221,7 +221,6 @@ func (tx *Transaction) CompileMessage() (*Message, error) {
 	var accountKeys []string
 	accountKeys = append(accountKeys, signedKeys...)
 	accountKeys = append(accountKeys, unsignedKeys...)
-	fmt.Println(accountKeys)
 	var instructions []*CompiledInstruction
 	for _, ins := range tx.Instructions {
 		data := base58.Encode(ins.GetData())
