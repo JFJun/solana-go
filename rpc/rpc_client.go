@@ -8,6 +8,7 @@ import (
 	"io/ioutil"
 	"math/rand"
 	"net/http"
+	"strconv"
 )
 
 type RpcClient struct {
@@ -99,10 +100,14 @@ func (rpc *RpcClient) SendRequest(method string, params []interface{}) ([]byte, 
 		rpcErr := response.Error.(map[string]interface{})
 		return nil, errors.New(fmt.Sprintf("Rpc get error,Code=【%d】,Message=【%s】", int(rpcErr["code"].(float64)), rpcErr["message"].(string)))
 	}
+
 	//如果返回的结果直接是一个string，就不在做json处理了，直接返回
 	switch response.Result.(type) {
 	case string:
 		return []byte(response.Result.(string)), nil
+	case float64:
+		f := strconv.FormatFloat(response.Result.(float64), 'f', -1, 64)
+		return []byte(f), nil
 	default:
 		data, err := json.Marshal(response.Result)
 		if err != nil {
