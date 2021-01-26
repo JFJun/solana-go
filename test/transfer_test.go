@@ -4,12 +4,13 @@ import (
 	"encoding/hex"
 	"encoding/json"
 	"fmt"
+	"math/big"
+	"testing"
+
 	"github.com/JFJun/solana-go/account"
 	"github.com/JFJun/solana-go/rpc"
 	"github.com/JFJun/solana-go/transaction"
 	"github.com/btcsuite/btcutil/base58"
-	"math/big"
-	"testing"
 )
 
 func Test_TransferTest(t *testing.T) {
@@ -43,7 +44,7 @@ func Test_TransferTest(t *testing.T) {
 		To:     account1.ToBase58(),
 		Amount: big.NewInt(123),
 	}
-	transfer2, err := transaction.NewTransfer(tp2)
+	transfer2, err := transaction.NewTransfer(tp2, transaction.SOLProgram)
 	if err != nil {
 		panic(err)
 	}
@@ -75,7 +76,7 @@ func Test_Transfer(t *testing.T) {
 		To:     to,
 		Amount: big.NewInt(123),
 	}
-	transfer, err := transaction.NewTransfer(tp)
+	transfer, err := transaction.NewTransfer(tp, transaction.SOLProgram)
 	if err != nil {
 		t.Fatal(err)
 	}

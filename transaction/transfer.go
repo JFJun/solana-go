@@ -11,9 +11,12 @@ import (
 	"encoding/binary"
 	"errors"
 	"fmt"
-	"github.com/btcsuite/btcutil/base58"
 	"math/big"
+
+	"github.com/btcsuite/btcutil/base58"
 )
+
+const SOLProgram = "11111111111111111111111111111111"
 
 type TransferParams struct {
 	From   string
@@ -28,7 +31,7 @@ func (tp *TransferParams) GetToPublicKey() []byte {
 	return base58.Decode(tp.To)
 }
 
-func NewTransfer(transfer TransferParams) (ITransactionInstruction, error) {
+func NewTransfer(transfer TransferParams, programId string) (ITransactionInstruction, error) {
 	transferIndex := uint32(2) //https://github.com/solana-labs/solana-web3.js/src/system-program.js-->p511  version:v0.64.0
 	lamports := transfer.Amount.Uint64()
 	buf1 := new(bytes.Buffer)
@@ -52,7 +55,7 @@ func NewTransfer(transfer TransferParams) (ITransactionInstruction, error) {
 		{transfer.GetFromPublicKey(), true, true},
 		{transfer.GetToPublicKey(), false, true},
 	})
-	err = ti.SetProgramId("11111111111111111111111111111111")
+	err = ti.SetProgramId(programId)
 	if err != nil {
 		return nil, err
 	}
